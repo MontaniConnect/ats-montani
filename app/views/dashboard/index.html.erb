@@ -8,6 +8,7 @@
     .filter-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
     .filter-btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 6px; background: #f5f5f5; cursor: pointer; font-size: 13px; }
     .empty-state { text-align: center; padding: 60px 20px; font-size: 16px; color: #999; background: white; border-radius: 8px; margin: 20px; }
+    table { background: white; margin: 20px; border-radius: 8px; overflow: hidden; }
   </style>
 
   <div class="dashboard-header">
@@ -32,7 +33,6 @@
 </div>
 
 <script>
-  // Fetch applicants from API
   async function loadApplicants() {
     try {
       const response = await fetch('/api/v1/applicants');
@@ -40,7 +40,7 @@
       
       const listDiv = document.getElementById('applicants-list');
       
-      if (data.success && data.data.length > 0) {
+      if (data.success && data.data && data.data.length > 0) {
         let html = '<table style="width: 100%; border-collapse: collapse;"><thead><tr><th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Name</th><th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Email</th><th style="text-align: left; padding: 10px; border-bottom: 1px solid #ddd;">Status</th></tr></thead><tbody>';
         
         data.data.forEach(app => {
@@ -50,17 +50,16 @@
         html += '</tbody></table>';
         listDiv.innerHTML = html;
         
-        document.getElementById('total-count').textContent = data.pagination.total_count;
+        document.getElementById('total-count').textContent = data.total_count;
         document.getElementById('pending-count').textContent = data.data.filter(a => a.status === 'pending').length;
       } else {
-        listDiv.textContent = 'No applications found.';
+        listDiv.innerHTML = '<div style="text-align: center; padding: 40px;">No applications found.</div>';
       }
     } catch (error) {
       console.error('Error loading applicants:', error);
-      document.getElementById('applicants-list').textContent = 'Error loading applicants.';
+      document.getElementById('applicants-list').innerHTML = '<div style="text-align: center; padding: 40px; color: red;">Error loading applicants.</div>';
     }
   }
   
-  // Load applicants when page loads
   loadApplicants();
 </script>
