@@ -37,8 +37,11 @@ class Api::V1::ApplicantsController < ApplicationController
   def index
     applicants = Applicant.all.order(created_at: :desc)
     render json: { 
-      success: true, 
-      data: applicants.map { |a| a.attributes }
+      success: true,
+      data: applicants.map { |a| a.attributes },
+      total_count: applicants.count,
+      current_page: 1,
+      total_pages: 1
     }
   rescue => e
     Rails.logger.error("Index error: #{e.message}")
