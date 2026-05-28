@@ -25,9 +25,7 @@ class Api::V1::ApplicantsController < ApplicationController
       heard_about_us: applicant_params[:heard_about_us],
       timeline_to_start: applicant_params[:timeline_to_start],
       resume_url: applicant_params[:resume_url],
-      status: 'pending',
-      ip_address: request.remote_ip,
-      user_agent: request.user_agent
+      status: 'pending'
     )
 
     render json: { success: true, applicant_id: applicant.id }, status: :created
