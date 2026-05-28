@@ -40,6 +40,10 @@ class Api::V1::ApplicantsController < ApplicationController
       success: true,
       data: applicants.map { |a| a.attributes },
       total_count: applicants.count,
+      pending_count: applicants.where(status: 'pending').count,
+      reviewed_count: applicants.where(status: 'reviewed').count,
+      hired_count: applicants.where(status: 'hired').count,
+      rejected_count: applicants.where(status: 'rejected').count,
       current_page: 1,
       total_pages: 1
     }
@@ -53,6 +57,18 @@ class Api::V1::ApplicantsController < ApplicationController
     render json: { success: true, data: applicant.attributes }
   rescue => e
     render json: { success: false, error: 'Not found' }, status: :not_found
+  end
+
+  def update
+    applicant = Applicant.find(params[:id])
+    
+    if params[:status].present?
+      applicant.update(status: params[:status])
+    end
+    
+    render json: { success: true, data: applicant.attributes }
+  rescue => e
+    render json: { success: false, error: e.message }, status: :bad_request
   end
 
   private
