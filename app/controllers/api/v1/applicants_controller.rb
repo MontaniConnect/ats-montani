@@ -35,14 +35,20 @@ class Api::V1::ApplicantsController < ApplicationController
   end
 
   def index
-    applicants = Applicant.recent.page(params[:page] || 1).per(20)
-    render json: { success: true, data: applicants.map { |a| ApplicantSerializer.new(a).as_json } }
+    applicants = Applicant.all.order(created_at: :desc)
+    render json: { 
+      success: true, 
+      data: applicants.map { |a| a.attributes }
+    }
+  rescue => e
+    Rails.logger.error("Index error: #{e.message}")
+    render json: { success: false, error: e.message }, status: :bad_request
   end
 
   def show
     applicant = Applicant.find(params[:id])
-    render json: { success: true, data: ApplicantSerializer.new(applicant) }
-  rescue
+    render json: { success: true, data: applicant.attributes }
+  rescue => e
     render json: { success: false, error: 'Not found' }, status: :not_found
   end
 
