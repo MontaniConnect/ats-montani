@@ -20,9 +20,6 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :test
 
   config.i18n.fallbacks = [I18n.default_locale]
-  config.action_view.full_sanitizer_class = Rails::Html::Sanitizer
-  config.action_view.sanitized_allowed_tags = %w( b i p code pre tt samp kbd var sub sup dfn mark abbr acronym strong em a href span br hr div ul ol li dl dt dd )
-
   config.active_support.report_deprecations = false
   config.active_support.use_standard_json_encoder = true
 
